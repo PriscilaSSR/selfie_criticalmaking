@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Style Transformation</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --accent-color: #4a90e2;
+            --text-main: #2d3436;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #styleLabel {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            min-height: 1.2em;
+        }
+
+        .image-stack {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.05s linear;
+        }
+
+        .layer.active {
+            opacity: 1;
+        }
+
+        .controls {
+            margin-top: 2rem;
+        }
+
+        /* Modern Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #dfe6e9;
+            border-radius: 4px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="styleLabel">Original</h1>
+
+    <div class="image-stack" id="imageStack">
+        <img src="style0.jpg" class="layer active" alt="Style 0">
+        <img src="style1.jpg" class="layer" alt="Style 1">
+        <img src="style2.jpg" class="layer" alt="Style 2">
+        <img src="style3.jpg" class="layer" alt="Style 3">
+    </div>
+
+    <div class="controls">
+        <input type="range" id="styleSlider" min="0" max="3" step="0.01" value="0">
+        <p class="hint">Slide to transform the face</p>
+    </div>
+</div>
+
+<script>
+    const slider = document.getElementById('styleSlider');
+    const images = document.querySelectorAll('.layer');
+    const label = document.getElementById('styleLabel');
+
+    // List your style names here to match the image order
+    const styleNames = [
+        "Original",
+        "Cyberpunk",
+        "Oil Painting",
+        "Vector Art"
+    ];
+
+    slider.addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        
+        // Update Label
+        const labelIndex = Math.round(value);
+        label.innerText = styleNames[labelIndex];
+
+        // Update Opacity for smooth crossfade
+        images.forEach((img, index) => {
+            let opacity = 0;
+            
+            // Logic to fade between images
+            if (value >= index && value <= index + 1) {
+                // Current image fading out as we move right
+                opacity = 1 - (value - index);
+            } else if (value >= index - 1 && value <= index) {
+                // Next image fading in as we move right
+                opacity = value - (index - 1);
+            }
+
+            img.style.opacity = opacity;
+        });
+    });
+</script>
+
+</body>
+</html>
