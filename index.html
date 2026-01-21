@@ -78,7 +78,6 @@
             margin-top: 2rem;
         }
 
-        /* Modern Range Slider Styling */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -134,7 +133,7 @@
     </div>
 
     <div class="controls">
-        <input type="range" id="styleSlider" min="0" max="3" step="0.01" value="0">
+        <input type="range" id="styleSlider" min="0" max="9" step="0.01" value="0">
         <p class="hint">Slide to transform the face</p>
     </div>
 </div>
@@ -144,12 +143,18 @@
     const images = document.querySelectorAll('.layer');
     const label = document.getElementById('styleLabel');
 
-    // List your style names here to match the image order
+    // Updated labels to match your 10 images
     const styleNames = [
-        "Original",
-        "Cyberpunk",
-        "Oil Painting",
-        "Vector Art"
+        "Original",             // 0
+        "Drawing",              // 1
+        "Ink Style",            // 2
+        "Pencil Sketch",        // 3
+        "Japanese Woodwork",    // 4
+        "Ink Variation",        // 5
+        "Caravaggio",           // 6
+        "3D Render",            // 7
+        "Generic AI",           // 8
+        "Personalized AI"       // 9
     ];
 
     slider.addEventListener('input', (e) => {
@@ -157,18 +162,19 @@
         
         // Update Label
         const labelIndex = Math.round(value);
-        label.innerText = styleNames[labelIndex];
+        if (styleNames[labelIndex]) {
+            label.innerText = styleNames[labelIndex];
+        }
 
         // Update Opacity for smooth crossfade
         images.forEach((img, index) => {
             let opacity = 0;
             
-            // Logic to fade between images
             if (value >= index && value <= index + 1) {
-                // Current image fading out as we move right
+                // Current image fading out
                 opacity = 1 - (value - index);
             } else if (value >= index - 1 && value <= index) {
-                // Next image fading in as we move right
+                // Next image fading in
                 opacity = value - (index - 1);
             }
 
